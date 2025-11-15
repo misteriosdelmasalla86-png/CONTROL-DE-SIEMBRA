@@ -1,0 +1,114 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    🌱 CONTROL DE SIEMBRA - ESTADO DEL PROYECTO 🌱            ║
+║                                                                               ║
+║                           Actualizado: 2025-11-15                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ COMPLETADO
+════════════════════════════════════════════════════════════════════════════════
+
+1. CONVERSIÓN DE DATASETS
+   ✓ Script: convertir-a-yolo.py
+   ✓ Manejo de errores con logging
+   ✓ Soporte para múltiples formatos (JPG, PNG, PPM)
+   ✓ Datasets convertidos:
+     - Maíz (MSDD): 10 imágenes + 10 etiquetas → train/
+     - Soja (Rosario): 15 imágenes + 15 etiquetas → val/
+
+2. ESTRUCTURA YOLO LISTA
+   ✓ datasets-yolo/
+   ├── images/
+   │   ├── train/ (10 imágenes)
+   │   └── val/   (15 imágenes)
+   └── labels/
+       ├── train/ (10 etiquetas)
+       └── val/   (15 etiquetas)
+
+3. INSTALACIÓN DE YOLOV5
+   ✓ Repositorio clonado: /workspaces/CONTROL-DE-SIEMBRA/yolov5
+   ✓ Archivo data.yaml configurado
+   ✓ Clase: semilla (nc: 1)
+
+4. APLICACIÓN WEB
+   ✓ index.html - Interface de usuario
+   ✓ app.js - Lógica de la aplicación
+   ✓ styles.css - Estilos
+   ✓ PWA configurada (funciona offline)
+
+5. DOCUMENTACIÓN
+   ✓ README_ENTRENAMIENTO.md - Guía completa
+   ✓ RESUMEN.txt - Este archivo
+
+
+📊 PRÓXIMOS PASOS
+════════════════════════════════════════════════════════════════════════════════
+
+Para entrenar el modelo YOLOv5:
+
+  cd /workspaces/CONTROL-DE-SIEMBRA/yolov5
+  
+  python train.py \
+    --img 640 \
+    --batch 8 \
+    --epochs 5 \
+    --data data.yaml \
+    --weights yolov5s.pt \
+    --name semillas-argentinas \
+    --device cpu
+
+
+🔍 VERIFICACIONES RÁPIDAS
+════════════════════════════════════════════════════════════════════════════════
+
+Ver datos de entrenamiento:
+  ls /workspaces/CONTROL-DE-SIEMBRA/datasets-yolo/images/train/
+  ls /workspaces/CONTROL-DE-SIEMBRA/datasets-yolo/labels/train/
+
+Ver datos de validación:
+  ls /workspaces/CONTROL-DE-SIEMBRA/datasets-yolo/images/val/
+  ls /workspaces/CONTROL-DE-SIEMBRA/datasets-yolo/labels/val/
+
+Verificar configuración YOLO:
+  cat /workspaces/CONTROL-DE-SIEMBRA/yolov5/data.yaml
+
+
+📂 ARCHIVOS CLAVE
+════════════════════════════════════════════════════════════════════════════════
+
+Raíz del proyecto:
+├── convertir-a-yolo.py          # Script de conversión
+├── app.js                        # Lógica de la app web
+├── index.html                    # Interface
+├── styles.css                    # Estilos
+├── entrenar.sh                   # Script de entrenamiento
+├── README_ENTRENAMIENTO.md       # Documentación
+└── RESUMEN.txt                   # Este archivo
+
+Datasets:
+├── datasets-argentina/           # Datos originales
+│   ├── MaizeSeedlingDetectionDataset/
+│   └── digital-agriculture-datasets/
+└── datasets-yolo/                # Datos en formato YOLO
+    ├── images/
+    └── labels/
+
+YOLOv5:
+└── yolov5/
+    ├── data.yaml                 # Config de datos
+    ├── train.py                  # Script de entrenamiento
+    ├── detect.py                 # Script de detección
+    └── weights/                  # Modelos descargados
+
+
+🚀 ESTADO GENERAL
+════════════════════════════════════════════════════════════════════════════════
+
+Código Python:        ✅ Sin errores
+Estructura de datos:  ✅ Verificada
+Aplicación web:       ✅ Funcional
+YOLOv5:              ✅ Instalado
+Documentación:        ✅ Completa
+
+🎯 PRÓXIMA META: Entrenar modelo YOLOv5
+
+════════════════════════════════════════════════════════════════════════════════
