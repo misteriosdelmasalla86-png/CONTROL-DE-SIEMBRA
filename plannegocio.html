@@ -1,0 +1,2275 @@
+<!DOCTYPE html><html lang="es"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Análisis Estratégico: Calculadora de Siembra INTA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tiempos+Headline:wght@400;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-secondary: #64748b;
+            --color-accent: #0ea5e9;
+            --color-warm: #f59e0b;
+            --color-success: #10b981;
+            --color-earth: #92400e;
+            --color-sage: #6b7280;
+        }
+        
+        .font-tiempos { font-family: 'Tiempos Headline', serif; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            background-color: #f8fafc;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .bento-hero {
+            grid-row: 1 / 3;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bento-stats {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bento-insight {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+        }
+        
+        .citation-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--color-primary);
+        }
+        
+        .citation-link:hover {
+            background-color: #eff6ff;
+        }
+        
+        .pull-quote {
+            border-left: 4px solid var(--color-primary);
+            padding-left: 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            font-size: 1.125rem;
+            color: var(--color-sage);
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 4rem 0;
+        }
+        
+        /* Mermaid diagram styling */
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+            
+            .bento-hero {
+                grid-row: 1;
+            }
+
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .bento-hero {
+                padding: 1.5rem;
+            }
+            
+            .hero-gradient {
+                padding: 1.5rem;
+            }
+            
+            .hero-gradient h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero-gradient p {
+                font-size: 0.875rem;
+            }
+            
+            .bento-stats, .bento-insight {
+                padding: 1.5rem;
+            }
+            
+            .grid-cols-3, .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .prose p, .text-lg {
+                font-size: 0.875rem;
+            }
+            
+            .pull-quote {
+                font-size: 1rem;
+            }
+            
+            .bento-grid {
+                gap: 1rem;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Fixed Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="font-tiempos font-bold text-lg text-slate-800 mb-4">Índice de Contenidos</h3>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="#analisis-proyecto" class="text-slate-600 hover:text-blue-600 transition-colors">1. Análisis del Proyecto</a>
+          </li>
+          <li>
+            <a href="#debate-experto" class="text-slate-600 hover:text-blue-600 transition-colors">2. Debate del Equipo Experto</a>
+          </li>
+          <li>
+            <a href="#problemas-mejora" class="text-slate-600 hover:text-blue-600 transition-colors">3. Problemas y Mejoras</a>
+          </li>
+          <li>
+            <a href="#ia-funcionalidades" class="text-slate-600 hover:text-blue-600 transition-colors">4. Funcionalidades con IA</a>
+          </li>
+          <li>
+            <a href="#roadmap" class="text-slate-600 hover:text-blue-600 transition-colors">5. Plan de Desarrollo</a>
+          </li>
+          <li>
+            <a href="#arquitectura" class="text-slate-600 hover:text-blue-600 transition-colors">6. Arquitectura</a>
+          </li>
+          <li>
+            <a href="#estrategia" class="text-slate-600 hover:text-blue-600 transition-colors">7. Estrategia de Crecimiento</a>
+          </li>
+          <li>
+            <a href="#validacion" class="text-slate-600 hover:text-blue-600 transition-colors">8. Validación Final</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="border-t pt-6">
+        <h4 class="font-medium text-slate-700 mb-3">Estadísticas Clave</h4>
+        <div class="space-y-2 text-xs text-slate-500">
+          <div class="flex justify-between">
+            <span>Impacto IA:</span>
+            <span class="font-medium">85%</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Reducción tiempo:</span>
+            <span class="font-medium">80%</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Precisión objetivo:</span>
+            <span class="font-medium">95%</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section with Bento Layout -->
+      <section class="px-8 py-12 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex items-center">
+        <div class="container mx-auto max-w-7xl">
+          <div class="bento-grid">
+            <!-- Main Hero -->
+            <div class="bento-hero relative">
+              <div class="absolute inset-0 opacity-10">
+                <img src="https://kimi-web-img.moonshot.cn/img/www.soyconnection.com/413deebb2c236c6b910f10378ac4dd30d6e75c48.jpg" alt="Agricultural machinery in a soybean field" class="w-full h-full object-cover" size="wallpaper" aspect="wide" color="green" style="photo" query="tractor planting soybeans" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              </div>
+              <div class="relative z-10">
+                <h1 class="font-tiempos text-4xl lg:text-5xl font-bold leading-tight mb-6">
+                  <span class="italic">Transformando</span>
+                  <br/>
+                  la Calidad de Siembra
+                  <br/>
+                  <span class="text-blue-200">con Inteligencia Artificial</span>
+                </h1>
+                <p class="text-xl text-blue-100 mb-8 max-w-lg">
+                  Análisis estratégico para convertir la calculadora de siembra
+                  en la herramienta líder de Argentina mediante innovación
+                  técnica y resolución de problemas reales del campo.
+                </p>
+                <div class="flex items-center space-x-4 text-sm text-blue-200">
+                  <span><i class="fas fa-seedling mr-2"></i>Agritech</span>
+                  <span><i class="fas fa-brain mr-2"></i>IA Aplicada</span>
+                  <span><i class="fas fa-chart-line mr-2"></i>Estrategia</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="bento-stats">
+              <h3 class="font-tiempos text-xl font-bold text-slate-800 mb-4">Oportunidad Identificada</h3>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-600">Mercado objetivo</span>
+                  <span class="font-bold text-blue-600">Productores argentinos</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-600">Problema principal</span>
+                  <span class="font-bold text-amber-600">Medición manual lenta</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-600">Solución propuesta</span>
+                  <span class="font-bold text-green-600">IA + Automatización</span>
+                </div>
+              </div>
+              <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                <p class="text-sm text-blue-700 font-medium">
+                  <i class="fas fa-lightbulb mr-2"></i>
+                  Reducción del tiempo de medición en un 80%
+                </p>
+              </div>
+            </div>
+
+            <!-- Insight Card -->
+            <div class="bento-insight">
+              <h3 class="font-tiempos text-xl font-bold mb-4">
+                <i class="fas fa-eye mr-2"></i>
+                Visión Estratégica
+              </h3>
+              <p class="text-amber-100 mb-4">
+                La verdadera revolución no es digitalizar cálculos,
+                sino eliminar la subjetividad humana del proceso
+                de medición mediante visión artificial.
+              </p>
+              <div class="text-sm text-amber-200">
+                — Análisis del Equipo Experto
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 1: Deep Project Analysis -->
+      <section id="analisis-proyecto" class="px-8 py-16 bg-white">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              1. Análisis Profundo del Proyecto
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Evaluación integral de la herramienta actual, identificación de problemas
+              reales del campo y análisis del panorama competitivo.
+            </p>
+          </header>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+                1.1 Evaluación de la Herramienta Existente
+              </h3>
+
+              <div class="mb-8">
+                <h4 class="font-semibold text-lg text-slate-700 mb-3">
+                  Funcionalidades Actuales
+                </h4>
+                <p class="text-slate-600 mb-4">
+                  La herramienta &#34;Siembra Precisa (INTA) - 2.0&#34; se estructura en torno a dos modos:
+                  <strong>Modo Campo</strong> para verificaciones rápidas y
+                  <strong>Modo Profesional</strong> para análisis técnicos
+                  <a href="https://cerealesrivadavia.netlify.app/" class="citation-link" target="_blank">[1]</a>.
+                </p>
+                <ul class="space-y-2 text-slate-600">
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>Verificación rápida (&lt; 5 segundos)</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>Histograma de distribución</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>Modo Noche para visibilidad</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-lg text-slate-700 mb-3">
+                Fundamento Metodológico
+              </h4>
+              <div class="bg-blue-50 p-6 rounded-lg">
+                <p class="text-blue-800 font-medium mb-3">
+                  <i class="fas fa-certificate mr-2"></i>
+                  Norma ISO 7256/1
+                </p>
+                <p class="text-blue-700 text-sm">
+                  El método se basa en la norma internacional que establece un marco
+                  estandarizado para medir la distribución de semillas en la fila
+                  <a href="https://www.argentina.gob.ar/noticias/siembra-de-precision-una-plataforma-online-pone-el-foco-en-la-calidad" class="citation-link" target="_blank">[5]</a>
+                  <a href="https://www.argentina.gob.ar/inta/tecnologias/campero" class="citation-link" target="_blank">[31]</a>.
+                </p>
+              </div>
+
+              <div class="mt-6">
+                <h5 class="font-medium text-slate-700 mb-3">Índices Clave:</h5>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                  <div class="bg-green-100 p-3 rounded">
+                    <div class="text-green-700 font-bold">Aceptables</div>
+                    <div class="text-green-600 text-sm">50-150% de Xref</div>
+                  </div>
+                  <div class="bg-red-100 p-3 rounded">
+                    <div class="text-red-700 font-bold">Fallas</div>
+                    <div class="text-red-600 text-sm">&gt; 1.5 × Xref</div>
+                  </div>
+                  <div class="bg-amber-100 p-3 rounded">
+                    <div class="text-amber-700 font-bold">Dobles</div>
+                    <div class="text-amber-600 text-sm">
+                      &lt; 0.5 × Xref</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="mb-16">
+              <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+                1.2 Identificación de la Problemática Real
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="font-semibold text-lg text-slate-700 mb-4">
+                    Métodos Tradicionales vs. Desafíos Ambientales
+                  </h4>
+                  <div class="space-y-4">
+                    <div class="border-l-4 border-red-400 pl-4">
+                      <h5 class="font-medium text-red-700">Medición Manual</h5>
+                      <p class="text-slate-600 text-sm">
+                        Proceso lento, subjetivo y propenso a errores humanos.
+                        La precisión depende de la habilidad y fatiga del operario
+                        <a href="https://www.sciencedirect.com/science/article/abs/pii/S0168169924002631" class="citation-link" target="_blank">[67]</a>.
+                      </p>
+                    </div>
+                    <div class="border-l-4 border-amber-400 pl-4">
+                      <h5 class="font-medium text-amber-700">Condiciones de Campo</h5>
+                      <p class="text-slate-600 text-sm">
+                        Luz solar intensa, viento, polvo y vibraciones dificultan
+                        el uso de dispositivos digitales y la precisión de las mediciones.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-lg text-slate-700 mb-4">
+                    Necesidades de Usuarios
+                  </h4>
+                  <div class="space-y-3">
+                    <div class="flex items-start">
+                      <i class="fas fa-user-hard-hat text-blue-500 mt-1 mr-3"></i>
+                      <div>
+                        <strong class="text-slate-700">Operarios:</strong>
+                        <span class="text-slate-600 text-sm block">
+                          Herramienta rápida, simple y confiable para ajustes inmediatos.
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-handshake text-green-500 mt-1 mr-3"></i>
+                      <div>
+                        <strong class="text-slate-700">Contratistas:</strong>
+                        <span class="text-slate-600 text-sm block">
+                          Documentación y reportes para clientes.
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-chart-line text-purple-500 mt-1 mr-3"></i>
+                      <div>
+                        <strong class="text-slate-700">Productores:</strong>
+                        <span class="text-slate-600 text-sm block">
+                          Trazabilidad y análisis comparativo entre lotes.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+                1.3 Análisis de la Competencia
+              </h3>
+
+              <div class="bg-gradient-to-r from-slate-50 to-blue-50 p-8 rounded-xl">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div>
+                    <h4 class="font-semibold text-lg text-slate-700 mb-4">
+                      <i class="fas fa-mobile-alt mr-2 text-blue-600"></i>
+                      App &#34;Campero&#34; del INTA
+                    </h4>
+                    <p class="text-slate-600 mb-4">
+                      La competencia directa, desarrollada por la EEA Hilario Ascasubi
+                      del INTA. Ofrece funcionalidades similares pero con la legitimidad
+                      de ser una app oficial
+                      <a href="https://www.argentina.gob.ar/inta/tecnologias/campero" class="citation-link" target="_blank">[11]</a>.
+                    </p>
+                    <div class="bg-white p-4 rounded-lg">
+                      <h5 class="font-medium text-slate-700 mb-2">Estrategia Competitiva:</h5>
+                      <p class="text-slate-600 text-sm">
+                        No competir en legitimidad, sino en experiencia de usuario,
+                        agilidad tecnológica e innovación con IA.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 class="font-semibold text-lg text-slate-700 mb-4">
+                      <i class="fas fa-certificate mr-2 text-green-600"></i>
+                      Ventaja Estratégica ISO
+                    </h4>
+                    <p class="text-slate-600 mb-4">
+                      La adopción de la norma ISO 7256-1:2010
+                      <a href="https://digitalcommons.unl.edu/cgi/viewcontent.cgi?article=1151&amp;context=biosysengfacpub" class="citation-link" target="_blank">[74]</a>
+                      proporciona un marco técnico transparente y reconocido internacionalmente.
+                    </p>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                      <h5 class="font-medium text-green-700 mb-2">Beneficios:</h5>
+                      <ul class="text-green-600 text-sm space-y-1">
+                        <li>• Base técnica auditable</li>
+                        <li>• Aumento de credibilidad</li>
+                        <li>• Independencia metodológica</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      </section>
+
+      <!-- Section 2: Expert Team Debate -->
+      <section id="debate-experto" class="px-8 py-16 bg-slate-50">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              2. Debate del Equipo Experto
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Perspectivas multidisciplinarias para una evaluación integral y
+              definición de la hoja de ruta estratégica.
+            </p>
+          </header>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Agronomist Perspective -->
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-seedling text-green-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-xl font-bold text-slate-800">Ing. Agrónomo (INTA)</h3>
+                  <p class="text-slate-600 text-sm">Especialista en siembra de precisión</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="border-l-4 border-green-400 pl-4">
+                  <h4 class="font-semibold text-green-700 mb-2">Precisión de Cálculos</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;La herramienta debe adherirse estrictamente a la norma ISO 7256/1.
+                    Cualquier desviación en los umbrales de Fallas y Dobles invalidaría
+                    los resultados y podría llevar a decisiones incorrectas en el campo.&#34;
+                  </p>
+                </div>
+
+                <div class="border-l-4 border-blue-400 pl-4">
+                  <h4 class="font-semibold text-blue-700 mb-2">Relevancia Agronómica</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;Los índices deben contextualizarse por cultivo. Un CV del 22% puede ser
+                    aceptable para soja pero deficiente para maíz. La herramienta debe
+                    proporcionar evaluaciones contextualizadas.&#34;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Developer Perspective -->
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-code text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-xl font-bold text-slate-800">Desarrollador Full Stack</h3>
+                  <p class="text-slate-600 text-sm">Arquitectura y escalabilidad</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="border-l-4 border-blue-400 pl-4">
+                  <h4 class="font-semibold text-blue-700 mb-2">Arquitectura Actual</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;La arquitectura serverless es excelente para el MVP, pero limita
+                    la persistencia de datos. La transición a Supabase es inevitable
+                    para soportar funcionalidades avanzadas.&#34;
+                  </p>
+                </div>
+
+                <div class="border-l-4 border-purple-400 pl-4">
+                  <h4 class="font-semibold text-purple-700 mb-2">Optimización</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;Implementar LocalStorage como solución intermedia y migrar
+                    a React/Vue para mejorar la mantenibilidad a largo plazo.&#34;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- UX Designer Perspective -->
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-palette text-purple-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-xl font-bold text-slate-800">UX Designer</h3>
+                  <p class="text-slate-600 text-sm">Experiencia de usuario en agro</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="border-l-4 border-purple-400 pl-4">
+                  <h4 class="font-semibold text-purple-700 mb-2">Diseño para Campo</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;La interfaz debe ser &#39;mobile-first&#39; con botones grandes,
+                    alto contraste para visibilidad solar y flujo de trabajo
+                    simplificado para uso con guantes.&#34;
+                  </p>
+                </div>
+
+                <div class="border-l-4 border-pink-400 pl-4">
+                  <h4 class="font-semibold text-pink-700 mb-2">Accesibilidad</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;Implementar modo offline, retroalimentación visual clara
+                    y guía paso a paso para reducir errores de ingreso de datos.&#34;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Specialist Perspective -->
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-brain text-indigo-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-xl font-bold text-slate-800">Especialista en IA</h3>
+                  <p class="text-slate-600 text-sm">IA aplicada al agro</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="border-l-4 border-indigo-400 pl-4">
+                  <h4 class="font-semibold text-indigo-700 mb-2">Visión por Computadora</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;YOLOv5 puede detectar semillas en imágenes, eliminando
+                    la medición manual. OpenCV para preprocesamiento y
+                    TensorFlow.js para posible procesamiento local.&#34;
+                  </p>
+                </div>
+
+                <div class="border-l-4 border-cyan-400 pl-4">
+                  <h4 class="font-semibold text-cyan-700 mb-2">Asistente de Diagnóstico</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;Gemini API o Llama 3 pueden generar análisis y
+                    recomendaciones contextualizadas, actuando como técnico virtual.&#34;
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pull Quote -->
+          <div class="pull-quote">
+            &#34;La verdadera revolución vendría de la mano de automatizar la captura de datos,
+            eliminando la subjetividad y acelerando el proceso.&#34;
+          </div>
+
+          <!-- Additional Expert Perspectives -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Product Manager -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-chart-bar text-indigo-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-xl font-bold text-slate-800">Product Manager</h3>
+                  <p class="text-slate-600 text-sm">Estrategia y posicionamiento</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-indigo-700 mb-2">Ajuste Producto-Mercado</h4>
+                  <p class="text-slate-600 text-sm mb-4">
+                    &#34;La necesidad es crítica: métodos manuales lentos y propensos a errores.
+                    La solución ataca directamente este punto de dolor con valor tangible.&#34;
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-indigo-700 mb-2">Roadmap Estratégico</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;Fases secuenciales: corregir fundamentos, implementar backend,
+                    integrar IA y escalar. Priorizar valor máximo con mínimo esfuerzo inicial.&#34;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contractor/Operator -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-tractor text-amber-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-xl font-bold text-slate-800">Contratista Rural</h3>
+                  <p class="text-slate-600 text-sm">Operador de sembradora</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-amber-700 mb-2">Dolores Reales</h4>
+                  <p class="text-slate-600 text-sm mb-4">
+                    &#34;Meter números en una cajita de texto con viento y vibraciones es un dolor.
+                    Necesito resultados visuales: semáforo verde/rojo, no números pequeños.&#34;
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-amber-700 mb-2">Necesidades Operativas</h4>
+                  <p class="text-slate-600 text-sm">
+                    &#34;Funcionar sin internet, generar reportes rápidos para WhatsApp,
+                    y simplificar el ingreso de datos para usar con guantes.&#34;
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Problems and Improvements -->
+      <section id="problemas-mejora" class="px-8 py-16 bg-white">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              3. Problemas Detectados y Mejoras Necesarias
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Identificación crítica de limitaciones y propuesta de mejoras
+              fundamentales para la evolución del producto.
+            </p>
+          </header>
+
+          <!-- Problems Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+                3.1 Problemas Críticos
+              </h3>
+
+              <div class="space-y-6">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+                  <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-4 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-red-700 mb-2">
+                        Precisión de Cálculos Incierta
+                      </h4>
+                      <p class="text-red-600 text-sm">
+                        Falta de transparencia en las fórmulas y posible desviación
+                        de los estándares ISO, generando desconfianza en los resultados.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-6">
+                  <div class="flex items-start">
+                    <i class="fas fa-mobile-alt text-orange-500 text-xl mr-4 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-orange-700 mb-2">
+                        Interfaz No Optimizada para Campo
+                      </h4>
+                      <p class="text-orange-600 text-sm">
+                        Ingreso manual de datos frustrante en condiciones adversas:
+                        viento, vibraciones, necesidad de usar guantes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                  <div class="flex items-start">
+                    <i class="fas fa-wifi text-yellow-600 text-xl mr-4 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-yellow-700 mb-2">
+                        Dependencia de Conexión
+                      </h4>
+                      <p class="text-yellow-600 text-sm">
+                        Funcionamiento limitado sin internet en zonas rurales
+                        con conectividad deficiente o inexistente.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+                3.2 Mejoras Esenciales
+              </h3>
+
+              <div class="space-y-6">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                  <div class="flex items-start">
+                    <i class="fas fa-certificate text-green-500 text-xl mr-4 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-green-700 mb-2">
+                        Implementar Cálculos ISO 7256/1
+                      </h4>
+                      <p class="text-green-600 text-sm">
+                        Auditar y reescribir el motor de cálculo para garantizar
+                        adherencia estricta a los estándares internacionales.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                  <div class="flex items-start">
+                    <i class="fas fa-camera text-blue-500 text-xl mr-4 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-blue-700 mb-2">
+                        Módulo de Captura por Imagen (IA)
+                      </h4>
+                      <p class="text-blue-600 text-sm">
+                        Visión por computadora para detectar semillas automáticamente,
+                        eliminando la medición manual y sus errores.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                  <div class="flex items-start">
+                    <i class="fas fa-database text-purple-500 text-xl mr-4 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-purple-700 mb-2">
+                        Backend con Supabase
+                      </h4>
+                      <p class="text-purple-600 text-sm">
+                        Persistencia de datos, autenticación y sincronización
+                        para convertirse en un sistema de gestión profesional.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Impact Analysis -->
+          <div class="bg-gradient-to-r from-slate-50 to-blue-50 p-8 rounded-xl">
+            <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6 text-center">
+              Impacto de las Mejoras Propuestas
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-tachometer-alt text-green-600 text-2xl"></i>
+                </div>
+                <h4 class="font-semibold text-slate-700 mb-2">Eficiencia</h4>
+                <p class="text-slate-600 text-sm">
+                  Reducción de tiempo de medición en un 80%,
+                  de 30+ minutos a menos de 5 minutos.
+                </p>
+              </div>
+
+              <div class="text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-bullseye text-blue-600 text-2xl"></i>
+                </div>
+                <h4 class="font-semibold text-slate-700 mb-2">Precisión</h4>
+                <p class="text-slate-600 text-sm">
+                  Eliminación de errores humanos en medición manual,
+                  mejorando la validez estadística de los resultados.
+                </p>
+              </div>
+
+              <div class="text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-users text-purple-600 text-2xl"></i>
+                </div>
+                <h4 class="font-semibold text-slate-700 mb-2">Adopción</h4>
+                <p class="text-slate-600 text-sm">
+                  Simplificación drástica del proceso para mayor
+                  adopción diaria por parte de operarios y contratistas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: AI Functionalities -->
+      <section id="ia-funcionalidades" class="px-8 py-16 bg-slate-50">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              4. Propuesta de Funciones con IA Gratuita
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Integración de Inteligencia Artificial para diferenciar la herramienta
+              y resolver problemas críticos utilizando tecnologías gratuitas.
+            </p>
+          </header>
+
+          <!-- AI Technologies Overview -->
+          <div class="bg-white p-8 rounded-xl shadow-sm mb-12">
+            <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+              4.1 Tecnologías IA Gratuitas Disponibles
+            </h3>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-slate-200">
+                    <th class="text-left py-3 px-4 font-semibold text-slate-700">Categoría</th>
+                    <th class="text-left py-3 px-4 font-semibold text-slate-700">Tecnología</th>
+                    <th class="text-left py-3 px-4 font-semibold text-slate-700">Uso en Proyecto</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Visión por Computadora</td>
+                    <td class="py-3 px-4 text-slate-600">YOLOv5 / YOLOv8</td>
+                    <td class="py-3 px-4 text-slate-600">Detección de semillas en imágenes</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Procesamiento</td>
+                    <td class="py-3 px-4 text-slate-600">OpenCV</td>
+                    <td class="py-3 px-4 text-slate-600">Preprocesamiento de imágenes</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Modelos de Lenguaje</td>
+                    <td class="py-3 px-4 text-slate-600">Gemini (Google AI Studio)</td>
+                    <td class="py-3 px-4 text-slate-600">Asistente de diagnóstico</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Alternativas LLM</td>
+                    <td class="py-3 px-4 text-slate-600">Llama 3 (OpenRouter)</td>
+                    <td class="py-3 px-4 text-slate-600">Análisis y recomendaciones</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Prototipado</td>
+                    <td class="py-3 px-4 text-slate-600">Gradio</td>
+                    <td class="py-3 px-4 text-slate-600">Demo rápida de modelos IA</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AI Features -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Image Capture Feature -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-camera text-blue-600 text-xl"></i>
+                </div>
+                <h3 class="font-tiempos text-xl font-bold text-slate-800">
+                  4.2 Detección de Semillas por Imagen
+                </h3>
+              </div>
+
+              <div class="space-y-4 mb-6">
+                <div>
+                  <h4 class="font-semibold text-blue-700 mb-2">Descripción</h4>
+                  <p class="text-slate-600 text-sm">
+                    El usuario toma una foto de la línea de siembra. La IA detecta
+                    automáticamente las semillas, calcula distancias y genera el análisis.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-700 mb-2">Beneficios</h4>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• Ahorro de tiempo: 30+ min a &lt; 5 min</li>
+                    <li>• Eliminación de errores humanos</li>
+                    <li>• Muestras más grandes y representativas</li>
+                    <li>• Mayor adopción por simplicidad</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="bg-white p-4 rounded-lg">
+                <h5 class="font-medium text-slate-700 mb-2">Implementación</h5>
+                <p class="text-slate-600 text-sm">
+                  <strong>Flujo:</strong> Captura → Proceso IA (Supabase Functions)
+                  → Detección YOLO → Cálculo de distancias → Análisis
+                </p>
+              </div>
+            </div>
+
+            <!-- Diagnostic Assistant Feature -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-comments text-green-600 text-xl"></i>
+                </div>
+                <h3 class="font-tiempos text-xl font-bold text-slate-800">
+                  4.3 Asistente de Diagnóstico
+                </h3>
+              </div>
+
+              <div class="space-y-4 mb-6">
+                <div>
+                  <h4 class="font-semibold text-green-700 mb-2">Descripción</h4>
+                  <p class="text-slate-600 text-sm">
+                    Análisis de resultados con LLM para generar informes en lenguaje natural,
+                    interpretación y recomendaciones accionables.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-green-700 mb-2">Valor</h4>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• Apoyo técnico inmediato en campo</li>
+                    <li>• Capacitación en el lugar de trabajo</li>
+                    <li>• Reducción de errores de ajuste</li>
+                    <li>• Mayor confianza del operario</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="bg-white p-4 rounded-lg">
+                <h5 class="font-medium text-slate-700 mb-2">Ejemplo de Output</h5>
+                <div class="bg-slate-100 p-3 rounded text-xs text-slate-600 italic">
+                  &#34;Se detectó un alto índice de fallas (15%). Esto suele deberse a
+                  presión de aire insuficiente o disco dosificador obstruido.
+                  Se recomienda verificar estos puntos.&#34;
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Roadmap -->
+      <section id="roadmap" class="px-8 py-16 bg-white">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              5. Plan de Desarrollo Paso a Paso
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Estrategia de implementación en cuatro fases para transformar
+              la herramienta en una solución integral y líder en el mercado.
+            </p>
+          </header>
+
+          <!-- Roadmap Visualization -->
+          <div class="mermaid-container">
+            <div class="mermaid-controls">
+              <button class="mermaid-control-btn zoom-in" title="放大">
+                <i class="fas fa-search-plus"></i>
+              </button>
+              <button class="mermaid-control-btn zoom-out" title="缩小">
+                <i class="fas fa-search-minus"></i>
+              </button>
+              <button class="mermaid-control-btn reset-zoom" title="重置">
+                <i class="fas fa-expand-arrows-alt"></i>
+              </button>
+              <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+            <div class="mermaid">
+              flowchart TD
+              A[&#34;Fase 1: Mejoras Fundamentales&#34;] --&gt; B[&#34;Fase 2: Base de Datos&#34;]
+              B --&gt; C[&#34;Fase 3: Implementación IA&#34;]
+              C --&gt; D[&#34;Fase 4: Escalamiento&#34;]
+
+              A1[&#34;Corrección Cálculos ISO&#34;] --&gt; A
+              A2[&#34;Optimización UX/UI&#34;] --&gt; A
+              A3[&#34;Modo Offline&#34;] --&gt; A
+
+              B1[&#34;Configurar Supabase&#34;] --&gt; B
+              B2[&#34;Sistema Usuarios&#34;] --&gt; B
+              B3[&#34;Sincronización&#34;] --&gt; B
+
+              C1[&#34;Detección Imágenes&#34;] --&gt; C
+              C2[&#34;Asistente Diagnóstico&#34;] --&gt; C
+              C3[&#34;Pruebas IA&#34;] --&gt; C
+
+              D1[&#34;Dashboard Análisis&#34;] --&gt; D
+              D2[&#34;Reportes PDF/Excel&#34;] --&gt; D
+              D3[&#34;Integraciones&#34;] --&gt; D
+            </div>
+          </div>
+
+          <!-- Phase Details -->
+          <div class="space-y-12">
+            <!-- Phase 1 -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4">
+                  <span class="text-white font-bold">1</span>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-2xl font-bold text-slate-800">Fase 1: Mejoras Fundamentales</h3>
+                  <p class="text-slate-600">Meses 1-2 • Corrección de errores críticos</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-700 mb-2">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Corrección Cálculos
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Auditar y corregir algoritmos para adherencia estricta a ISO 7256/1.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-700 mb-2">
+                    <i class="fas fa-mobile-alt mr-2"></i>
+                    Optimización UX/UI
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Rediseño mobile-first, mejor legibilidad y modo de alto contraste.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-700 mb-2">
+                    <i class="fas fa-save mr-2"></i>
+                    Modo Offline
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Implementar LocalStorage para guardar mediciones localmente.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4">
+                  <span class="text-white font-bold">2</span>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-2xl font-bold text-slate-800">Fase 2: Base de Datos y Sincronización</h3>
+                  <p class="text-slate-600">Meses 3-4 • Transición a arquitectura cliente-servidor</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-700 mb-2">
+                    <i class="fas fa-database mr-2"></i>
+                    Configurar Supabase
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Base de datos PostgreSQL, autenticación y almacenamiento.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-700 mb-2">
+                    <i class="fas fa-users mr-2"></i>
+                    Sistema Usuarios
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Registro, login y gestión de usuarios con roles.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-700 mb-2">
+                    <i class="fas fa-sync mr-2"></i>
+                    Sincronización
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Sincronizar datos locales con nube para trabajo offline.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mr-4">
+                  <span class="text-white font-bold">3</span>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-2xl font-bold text-slate-800">Fase 3: Implementación de IA</h3>
+                  <p class="text-slate-600">Meses 5-7 • Funcionalidades de alto impacto</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-purple-700 mb-2">
+                    <i class="fas fa-camera mr-2"></i>
+                    Captura por Imagen
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Desarrollar e integrar modelo YOLO para detección de semillas.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-purple-700 mb-2">
+                    <i class="fas fa-brain mr-2"></i>
+                    Asistente Diagnóstico
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Integrar LLM para análisis y recomendaciones automáticas.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-purple-700 mb-2">
+                    <i class="fas fa-vial mr-2"></i>
+                    Pruebas IA
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Validación con usuarios reales y ajuste de modelos.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center mr-4">
+                  <span class="text-white font-bold">4</span>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-2xl font-bold text-slate-800">Fase 4: Escalamiento y Características Avanzadas</h3>
+                  <p class="text-slate-600">Mes 8+ • Funcionalidades para usuarios profesionales</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-amber-700 mb-2">
+                    <i class="fas fa-chart-line mr-2"></i>
+                    Dashboard Análisis
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Panel de control con gráficos y análisis históricos.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-amber-700 mb-2">
+                    <i class="fas fa-file-pdf mr-2"></i>
+                    Reportes Automáticos
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Generación de PDFs y Excel para compartir con clientes.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-amber-700 mb-2">
+                    <i class="fas fa-plug mr-2"></i>
+                    Integraciones
+                  </h4>
+                  <p class="text-slate-600 text-sm">
+                    Conexión con otras plataformas agropecuarias.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Architecture -->
+      <section id="arquitectura" class="px-8 py-16 bg-white">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              6. Arquitectura Recomendada
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Propuesta de arquitectura moderna y escalable para soportar
+              el crecimiento y nuevas funcionalidades.
+            </p>
+          </header>
+
+          <!-- Architecture Diagram -->
+          <div class="mermaid-container">
+            <div class="mermaid-controls">
+              <button class="mermaid-control-btn zoom-in" title="放大">
+                <i class="fas fa-search-plus"></i>
+              </button>
+              <button class="mermaid-control-btn zoom-out" title="缩小">
+                <i class="fas fa-search-minus"></i>
+              </button>
+              <button class="mermaid-control-btn reset-zoom" title="重置">
+                <i class="fas fa-expand-arrows-alt"></i>
+              </button>
+              <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+            <div class="mermaid">
+              graph TB
+              subgraph Frontend
+              A[&#34;PWA React/Vue.js&#34;] --&gt; B[&#34;Service Workers&#34;]
+              B --&gt; C[&#34;LocalStorage&#34;]
+              end
+
+              subgraph Backend
+              D[&#34;Supabase&#34;] --&gt; E[&#34;PostgreSQL&#34;]
+              D --&gt; F[&#34;Autenticación&#34;]
+              D --&gt; G[&#34;Almacenamiento&#34;]
+              end
+
+              subgraph IA
+              H[&#34;Edge Functions&#34;] --&gt; I[&#34;YOLO Detection&#34;]
+              H --&gt; J[&#34;LLM Analysis&#34;]
+              end
+
+              C --&gt; D
+              A --&gt; H
+              I --&gt; K[&#34;Resultados&#34;]
+              J --&gt; K
+            </div>
+          </div>
+
+          <!-- Architecture Components -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Frontend -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl">
+              <h3 class="font-tiempos text-xl font-bold text-slate-800 mb-6">
+                <i class="fas fa-desktop mr-3 text-blue-600"></i>
+                Frontend: PWA Moderna
+              </h3>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-blue-700 mb-2">Tecnología</h4>
+                  <p class="text-slate-600 text-sm mb-4">
+                    Progressive Web App (PWA) con React o Vue.js para instalación
+                    similar a app nativa, funcionamiento offline y notificaciones push.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-700 mb-2">Principios de Diseño</h4>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• Mobile-first y accesibilidad WCAG</li>
+                    <li>• Alto contraste para visibilidad solar</li>
+                    <li>• Elementos táctiles grandes (44x44px mínimo)</li>
+                    <li>• Modo offline robusto con Service Workers</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Backend -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-xl">
+              <h3 class="font-tiempos text-xl font-bold text-slate-800 mb-6">
+                <i class="fas fa-server mr-3 text-green-600"></i>
+                Backend: Supabase Serverless
+              </h3>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-green-700 mb-2">Componentes</h4>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• PostgreSQL para datos estructurados</li>
+                    <li>• Autenticación completa con roles</li>
+                    <li>• Almacenamiento de imágenes y archivos</li>
+                    <li>• Edge Functions para lógica de negocio</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-green-700 mb-2">Estructura de Datos</h4>
+                  <p class="text-slate-600 text-sm">
+                    Relacional con tablas para usuarios, fincas, lotes,
+                    evaluaciones y reportes para gestión organizada.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Integration -->
+          <div class="mt-12 bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-xl">
+            <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+              <i class="fas fa-brain mr-3 text-purple-600"></i>
+              Integración de IA
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 class="font-semibold text-purple-700 mb-3">Pipeline de Imágenes</h4>
+                <div class="space-y-2 text-sm text-slate-600">
+                  <div class="flex items-center">
+                    <div class="w-6 h-6 bg-purple-200 rounded-full flex items-center justify-center mr-3">
+                      <span class="text-purple-700 font-bold text-xs">1</span>
+                    </div>
+                    <span>Recepción de imagen</span>
+                  </div>
+                  <div class="flex items-center">
+                    <div class="w-6 h-6 bg-purple-200 rounded-full flex items-center justify-center mr-3">
+                      <span class="text-purple-700 font-bold text-xs">2</span>
+                    </div>
+                    <span>Preprocesamiento OpenCV</span>
+                  </div>
+                  <div class="flex items-center">
+                    <div class="w-6 h-6 bg-purple-200 rounded-full flex items-center justify-center mr-3">
+                      <span class="text-purple-700 font-bold text-xs">3</span>
+                    </div>
+                    <span>Inferencia YOLO</span>
+                  </div>
+                  <div class="flex items-center">
+                    <div class="w-6 h-6 bg-purple-200 rounded-full flex items-center justify-center mr-3">
+                      <span class="text-purple-700 font-bold text-xs">4</span>
+                    </div>
+                    <span>Cálculo de distancias</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-semibold text-purple-700 mb-3">Servicio LLM</h4>
+                <p class="text-slate-600 text-sm mb-4">
+                  Edge Function que recibe índices, construye prompt para LLM
+                  (Gemini/OpenRouter) y devuelve análisis generado.
+                </p>
+                <div class="bg-white p-4 rounded-lg">
+                  <h5 class="font-medium text-slate-700 mb-2">Ventajas</h5>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• Lógica IA en servidor</li>
+                    <li>• Protección de claves API</li>
+                    <li>• Mayor control del proceso</li>
+                    <li>• Escalabilidad automática</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 7: Growth Strategy -->
+      <section id="estrategia" class="px-8 py-16 bg-slate-50">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              7. Estrategia de Crecimiento
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Plan de posicionamiento, adquisición de usuarios y modelo de monetización
+              para consolidar la herramienta como líder del mercado.
+            </p>
+          </header>
+
+          <!-- Positioning -->
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl mb-12">
+            <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+              <i class="fas fa-bullhorn mr-3 text-blue-600"></i>
+              Posicionamiento y Marca
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 class="font-semibold text-blue-700 mb-4">Mensaje Clave</h4>
+                <div class="bg-white p-6 rounded-lg">
+                  <p class="text-slate-700 font-medium mb-2">
+                    &#34;La Calculadora de Siembra Más Precisa y Fácil de Usar de Argentina&#34;
+                  </p>
+                  <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <strong class="text-blue-600">Precisa</strong>
+                      <p class="text-slate-600 text-sm">Adherencia ISO 7256/1</p>
+                    </div>
+                    <div>
+                      <strong class="text-green-600">Fácil</strong>
+                      <p class="text-slate-600 text-sm">Diseño mobile-first</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-semibold text-blue-700 mb-4">Diferenciación</h4>
+                <div class="space-y-3">
+                  <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <div>
+                      <strong class="text-slate-700">Resolución Real</strong>
+                      <p class="text-slate-600 text-sm">Soluciona problemas concretos del campo</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <div>
+                      <strong class="text-slate-700">Innovación IA</strong>
+                      <p class="text-slate-600 text-sm">Automatización y diagnóstico inteligente</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <div>
+                      <strong class="text-slate-700">Diseñado para Campo</strong>
+                      <p class="text-slate-600 text-sm">Robustez y simplicad en condiciones adversas</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Acquisition -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+              <h3 class="font-tiempos text-xl font-bold text-slate-800 mb-6">
+                <i class="fas fa-users mr-3 text-green-600"></i>
+                Canales de Adquisición
+              </h3>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-green-700 mb-2">Marketing de Contenidos</h4>
+                  <p class="text-slate-600 text-sm mb-2">
+                    Tutoriales en video, artículos técnicos, casos de éxito.
+                    Canales: Facebook, YouTube, WhatsApp.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-green-700 mb-2">Alianzas Estratégicas</h4>
+                  <p class="text-slate-600 text-sm mb-2">
+                    Cooperativas agrícolas, asociaciones de contratistas,
+                    facultades de agronomía.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-green-700 mb-2">Eventos del Sector</h4>
+                  <p class="text-slate-600 text-sm">
+                    Ferias agropecuarias: Expoagro, Exposición Rural de Palermo.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+              <h3 class="font-tiempos text-xl font-bold text-slate-800 mb-6">
+                <i class="fas fa-handshake mr-3 text-purple-600"></i>
+                Comunidad y Soporte
+              </h3>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-purple-700 mb-2">Grupo de WhatsApp</h4>
+                  <p class="text-slate-600 text-sm mb-2">
+                    Comunidad de usuarios para feedback, soporte y
+                    validación social.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-purple-700 mb-2">Demo en Vivo</h4>
+                  <p class="text-slate-600 text-sm mb-2">
+                    Demostraciones en campo con productores para
+                    validación práctica.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-purple-700 mb-2">Soporte Técnico</h4>
+                  <p class="text-slate-600 text-sm">
+                    Documentación completa y asistencia para adopción.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monetization -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-8 rounded-xl">
+            <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+              <i class="fas fa-coins mr-3 text-amber-600"></i>
+              Modelo de Monetización (Futuro)
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-white p-6 rounded-lg">
+                <h4 class="font-semibold text-amber-700 mb-3">Modelo Freemium</h4>
+                <p class="text-slate-600 text-sm mb-3">
+                  Funciones básicas gratuitas, funciones avanzadas
+                  en plan de pago.
+                </p>
+                <div class="text-xs text-amber-600">
+                  <strong>Ejemplos de premium:</strong>
+                  <br/>
+                  • Análisis histórico avanzado
+                  <br/>
+                  • Reportes personalizados
+                  <br/>
+                  • Múltiples usuarios
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg">
+                <h4 class="font-semibold text-amber-700 mb-3">Suscripción Empresarial</h4>
+                <p class="text-slate-600 text-sm mb-3">
+                  Para contratistas y empresas agrícolas que necesitan
+                  gestión centralizada.
+                </p>
+                <div class="text-xs text-amber-600">
+                  <strong>Incluye:</strong>
+                  <br/>
+                  • Dashboard de gestión
+                  <br/>
+                  • Soporte prioritario
+                  <br/>
+                  • Análisis agregados
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg">
+                <h4 class="font-semibold text-amber-700 mb-3">Servicios de Consultoría</h4>
+                <p class="text-slate-600 text-sm mb-3">
+                  Análisis de datos agregados y anonimizados para
+                  empresas de insumos.
+                </p>
+                <div class="text-xs text-amber-600">
+                  <strong>Valor:</strong>
+                  <br/>
+                  • Tendencias regionales
+                  <br/>
+                  • Análisis de rendimiento
+                  <br/>
+                  • Investigación agronómica
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 8: Final Validation -->
+      <section id="validacion" class="px-8 py-16 bg-white">
+        <div class="container mx-auto max-w-4xl">
+          <header class="mb-12">
+            <h2 class="font-tiempos text-4xl font-bold text-slate-800 mb-4">
+              8. Validación Final del Equipo
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed">
+              Consenso del equipo experto sobre la viabilidad, dirección estratégica
+              y potencial del proyecto.
+            </p>
+          </header>
+
+          <!-- Expert Consensus Table -->
+          <div class="bg-gradient-to-r from-slate-50 to-blue-50 p-8 rounded-xl mb-12">
+            <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-8 text-center">
+              Resumen de Aportes y Consenso
+            </h3>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-slate-200">
+                    <th class="text-left py-3 px-4 font-semibold text-slate-700">Rol</th>
+                    <th class="text-left py-3 px-4 font-semibold text-slate-700">Aporte Principal</th>
+                    <th class="text-left py-3 px-4 font-semibold text-slate-700">Consenso</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Ing. Agrónomo</td>
+                    <td class="py-3 px-4 text-slate-600">Precisión técnica basada en ISO</td>
+                    <td class="py-3 px-4 text-slate-600">La precisión es la base de la credibilidad</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Desarrollador</td>
+                    <td class="py-3 px-4 text-slate-600">Arquitectura escalable con Supabase</td>
+                    <td class="py-3 px-4 text-slate-600">Backend esencial para funcionalidades avanzadas</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">UX Designer</td>
+                    <td class="py-3 px-4 text-slate-600">Diseño mobile-first y accesibilidad</td>
+                    <td class="py-3 px-4 text-slate-600">La UX es crítica para adopción en campo</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Especialista IA</td>
+                    <td class="py-3 px-4 text-slate-600">Automatización y diagnóstico inteligente</td>
+                    <td class="py-3 px-4 text-slate-600">La IA es el gran diferenciador</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Product Manager</td>
+                    <td class="py-3 px-4 text-slate-600">Estrategia de posicionamiento clara</td>
+                    <td class="py-3 px-4 text-slate-600">Enfoque estratégico y centrado en usuario</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 font-medium text-slate-700">Contratista</td>
+                    <td class="py-3 px-4 text-slate-600">Feedback práctico de dolores reales</td>
+                    <td class="py-3 px-4 text-slate-600">La herramienta debe resolver problemas concretos</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Strategic Direction -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl">
+              <h3 class="font-tiempos text-xl font-bold text-slate-800 mb-6">
+                <i class="fas fa-compass mr-3 text-blue-600"></i>
+                Dirección Estratégica
+              </h3>
+
+              <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-700 mb-2">Consenso Unánime</h4>
+                  <p class="text-slate-600 text-sm">
+                    Evolución de calculadora manual a sistema inteligente
+                    de gestión de calidad de siembra.
+                  </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-700 mb-2">Pilares Fundamentales</h4>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• Corrección técnica (ISO 7256/1)</li>
+                    <li>• Innovación en UX (IA + mobile-first)</li>
+                    <li>• Resolución de problemas reales del campo</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-xl">
+              <h3 class="font-tiempos text-xl font-bold text-slate-800 mb-6">
+                <i class="fas fa-check-double mr-3 text-green-600"></i>
+                Validación Técnica
+              </h3>
+
+              <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-700 mb-2">Arquitectura Aprobada</h4>
+                  <p class="text-slate-600 text-sm">
+                    PWA (React/Vue) + Supabase backend serverless
+                    para escalabilidad y mantenibilidad.
+                  </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-700 mb-2">Roadmap Validado</h4>
+                  <p class="text-slate-600 text-sm">
+                    Secuencia lógica: Mejoras → Backend → IA → Escalamiento,
+                    construyendo sobre bases sólidas.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final Statement -->
+          <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-xl text-center">
+            <h3 class="font-tiempos text-2xl font-bold text-slate-800 mb-6">
+              Declaración de Viabilidad y Potencial
+            </h3>
+
+            <div class="max-w-3xl mx-auto">
+              <p class="text-lg text-slate-700 mb-6 leading-relaxed">
+                El equipo valida unánimemente que, siguiendo el plan estratégico y técnico propuesto,
+                el proyecto tiene el <strong class="text-purple-700">potencial real de convertirse
+                  en la mejor calculadora de control de siembra de Argentina</strong>.
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-star text-purple-600 text-2xl"></i>
+                  </div>
+                  <h4 class="font-semibold text-slate-700">Valor Inmenso</h4>
+                  <p class="text-slate-600 text-sm">Automatización y diagnóstico resuelven dolores críticos</p>
+                </div>
+
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                  </div>
+                  <h4 class="font-semibold text-slate-700">Tecnologías Viables</h4>
+                  <p class="text-slate-600 text-sm">Stack gratuito y de código abierto es suficiente</p>
+                </div>
+
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-trophy text-blue-600 text-2xl"></i>
+                  </div>
+                  <h4 class="font-semibold text-slate-700">Potencial Liderazgo</h4>
+                  <p class="text-slate-600 text-sm">Combinación única de precisión, UX e innovación IA</p>
+                </div>
+              </div>
+
+              <div class="mt-8 p-6 bg-white rounded-xl">
+                <p class="text-slate-700 font-medium italic">
+                  &#34;La combinación de un fundamento técnico sólido (ISO),
+                  una experiencia de usuario superior y la integración
+                  innovadora de IA la posiciona claramente por encima de
+                  las soluciones existentes en el mercado argentino.&#34;
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-slate-800 text-white py-12">
+        <div class="container mx-auto max-w-4xl px-8">
+          <div class="text-center">
+            <h3 class="font-tiempos text-2xl font-bold mb-4">
+              Transformando la Agricultura Argentina
+            </h3>
+            <p class="text-slate-300 mb-6">
+              Estrategia integral para convertir la calculadora de siembra
+              en la herramienta líder del mercado mediante innovación
+              técnica y resolución de problemas reales.
+            </p>
+            <div class="flex justify-center space-x-6 text-slate-400">
+              <span><i class="fas fa-seedling mr-2"></i>Agritech</span>
+              <span><i class="fas fa-brain mr-2"></i>IA Aplicada</span>
+              <span><i class="fas fa-chart-line mr-2"></i>Estrategia</span>
+              <span><i class="fas fa-users mr-2"></i>Impacto Real</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#3b82f6',
+                primaryTextColor: '#1f2937',
+                primaryBorderColor: '#374151',
+                lineColor: '#6b7280',
+                secondaryColor: '#f8fafc',
+                tertiaryColor: '#e2e8f0',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondaryBkg: '#f8fafc',
+                tertiaryBkg: '#f1f5f9',
+                nodeBorder: '#374151',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#d1d5db',
+                defaultLinkColor: '#6b7280',
+                titleColor: '#1f2937',
+                edgeLabelBackground: '#ffffff',
+                nodeTextColor: '#1f2937'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            sequence: {
+                useMaxWidth: false,
+                wrap: true
+            },
+            gantt: {
+                useMaxWidth: false
+            }
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Initialize mermaid controls after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMermaidControls();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu toggle (if needed)
+        const toggleButton = document.createElement('button');
+        toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+        toggleButton.className = 'fixed top-4 left-4 z-50 bg-white p-3 rounded-lg shadow-lg lg:hidden';
+        document.body.appendChild(toggleButton);
+
+        toggleButton.addEventListener('click', () => {
+            const toc = document.querySelector('.toc-fixed');
+            toc.classList.toggle('open');
+        });
+
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            const toc = document.querySelector('.toc-fixed');
+            const isOpen = toc.classList.contains('open');
+            const isClickInsideToc = toc.contains(e.target);
+            const isClickOnToggle = toggleButton.contains(e.target);
+
+            if (isOpen && !isClickInsideToc && !isClickOnToggle) {
+                toc.classList.remove('open');
+            }
+        });
+
+        // Add active state to TOC links based on scroll position
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const top = section.offsetTop;
+                const bottom = top + section.offsetHeight;
+                const link = document.querySelector(`a[href="#${section.id}"]`);
+                
+                if (link && scrollPos >= top && scrollPos < bottom) {
+                    document.querySelectorAll('.toc-fixed a').forEach(a => a.classList.remove('text-blue-600', 'font-semibold'));
+                    link.classList.add('text-blue-600', 'font-semibold');
+                }
+            });
+        });
+    </script>
+  
+
+</body></html>
